@@ -1,0 +1,212 @@
+//suresh
+ var $userName = "sureshgobi2608@gmail.com";
+ var $password = "Suresh@78680";
+  
+  //developer
+ //var $userName ="clevermoedeveloper@gmail.com";
+ //var $password = "clevermoe@1234";
+ 
+ var $campaign_id="";
+ var $moeName="Classic Campaign 1"
+ var $moeUrl="https://sisterjane.com/collections/tops-sale/products/starlight-oversized-shirt";
+ var $productImage="C:\\Users\\Administrator\\Pictures\\valentino.jpg";
+ var $youtubeIcon="C:\\Users\\Administrator\\Pictures\\youtubeICON.png";
+ var $headline="Moe Test"
+ var $source1="car";
+ var $source2="pizza";
+ var $source3="sports";
+ var $source4="https://sisterjane.com/collections/tops-sale/products/starlight-oversized-shirt";
+ var $source5="https://www.timbuk2.com/products/1036-timbuk2-x-astro-gaming-bp35-backpack";
+
+ 
+ 
+  var $fb_target=0;
+  var $twitter_target=0;
+  var $insta_target=0;
+  var $linkedin_target=0;
+  var $youtube_target=0;
+  var $reddit_target=0;
+  
+  login();
+  createCampaign();
+  campaignName();
+  addSource();
+  campaignId();
+  target_check();
+  //schedule_budget();
+  //AutoBudget();
+  //deleteCampaign();
+    logout();
+  
+  function logout(){
+  _wait($timeCalculation(5));
+  _click(_link("Log-Out"));
+  }
+ 
+  function login() {
+	_navigateTo("https://app.clevermoe.com");
+	//_navigateTo("https://44.232.220.230/login");
+    if (_condition(_exists(_textbox("userName")))) {
+        $notLoggedOut = true;
+        _setValue(_textbox("userName"), $userName);
+        _setValue(_password("password"), $password);
+		_click(_link("Login[1]"));
+		
+    } else {
+        _log("Login email input box not found");
+
+    }
+    _wait($timeCalculation(5));
+}
+
+function $timeCalculation($s){
+	var t=$s*1000;
+	return t;
+}
+
+function campaignName(){
+	_click(_link("Ok"));
+}
+
+function AutoBudget(){
+	_setValue(_textbox("daily-budget-input"), "50");
+}
+
+function schedule_budget(){
+	_navigateTo("https://app.clevermoe.com/ad-planner-create-campaign?campaignListId="+$campaign_id);
+	_click(_link("Next step"));
+}
+
+function createCampaign(){
+	_click(_link("New Ad Campaign"));
+	_click(_div("Advanced Ad Options"));
+	_setValue(_textbox("campaign-name"), $moeName);
+}
+
+ function campaignId(){
+	//_click(_link("Dashboard"));
+		_navigateTo("https://app.clevermoe.com");
+	 $campaign_id = _getAttribute(_span($moeName), "campaignid");
+	_log($campaign_id);
+}
+
+function addSource(){
+	//_click(_span($moeName));
+	_setValue(_textbox("campaign-name"), $source1);
+	_click(_link("Add source"));
+	_wait($timeCalculation(10));
+	_click(_link("Schedule & Budget"))
+	_click(_link("Sources"));
+	_setValue(_textbox("campaign-name"), $source2);
+	_click(_link("Add source"));
+	_wait($timeCalculation(10));
+	_click(_link("Schedule & Budget"))
+	_click(_link("Sources"));
+	_setValue(_textbox("campaign-name"), $source3);
+	_click(_link("Add source"));
+	_wait($timeCalculation(10));
+	_click(_link("Schedule & Budget"))
+	_click(_link("Sources"));
+	_setValue(_textbox("campaign-name"), $source4);
+	_click(_link("Add source"));
+	_wait($timeCalculation(10));
+	_click(_link("Schedule & Budget"))
+	_click(_link("Sources"));
+	_setValue(_textbox("campaign-name"), $source5);
+	_click(_link("Add source"));
+	_wait($timeCalculation(10));
+	//_click(_link("Dashboard"));
+	_navigateTo("https://app.clevermoe.com");
+}
+
+function deleteCampaign(){
+	//_click(_link("Dashboard"));
+	_navigateTo("https://app.clevermoe.com");
+	_wait($timeCalculation(30));
+	_click(_link("Delete[1]"));
+	_click(_link("Yes"));
+	_wait($timeCalculation(30));
+	_click(_span(21));
+}
+
+function target_check(){
+	_wait($timeCalculation(3600));
+	_click(_link("Dashboard"));
+	_wait($timeCalculation(10));
+	login();
+	goToTargetPage();
+	getTargets();
+	var $targetCheckVariable=(targetCheck($fb_target,$twitter_target,$insta_target,$linkedin_target,$youtube_target,$reddit_target));
+	_log($targetCheckVariable);
+	if($targetCheckVariable){
+	  _log("success");
+	  AfteraTarget();
+	}else{
+	   _log("fail");
+	   _click(_link("Re-Spider"));
+	   _click(_link("Dashboard"));
+	   _wait($timeCalculation(3600));
+	   _click(_link("Dashboard"));
+	   _wait($timeCalculation(10));
+	   login();
+	   _wait($timeCalculation(30));
+	   goToTargetPage();
+	   getTargets();
+	   var $secondCheck=targetCheck($fb_target,$twitter_target,$insta_target,$linkedin_target,$youtube_target,$reddit_target)
+	   if($secondCheck){
+		  _log("success2");
+		  AfteraTarget();
+	   }else{
+	      _log("fail2");
+		   _alert("Please try an another Url")   
+	   }
+	 }	  
+}
+
+function AfteraTarget(){
+	schedule_budget();
+	AutoBudget();
+}
+
+function goToTargetPage(){
+	_navigateTo("https://app.clevermoe.com/ad-planner-campaign-targets?campaignListId="+$campaign_id);
+}
+
+function getTargets(){
+	var $testTargets = _getText(_div("target-statistics"));
+	var $arr1=$testTargets.split(" ");
+	var $FacebookTarget=$arr1[6];
+	var $TwitterTarget=$arr1[8];
+	var $InstagramTarget=$arr1[10];
+	var $LinkedInTarget=$arr1[12];
+	var $YouTubeTarget=$arr1[14];
+	var $RedditTarget=$arr1[16];
+		
+	var $fbInt=parseInt($FacebookTarget);
+	var $TwitterInt=parseInt($TwitterTarget);
+	var $InstagramInt=parseInt($InstagramTarget);
+    var $LinkedInInt=parseInt($LinkedInTarget);
+    var $YouTubeInt=parseInt($YouTubeTarget);
+    var $RedditInt=parseInt($RedditTarget);
+	 
+	$fb_target=$fbInt;
+	$twitter_target=$TwitterInt;
+    $insta_target=$InstagramInt;
+    $linkedin_target=$LinkedInInt;
+    $youtube_target=$YouTubeInt;
+    $reddit_target=$RedditInt;
+	_log("fb_target"+$fb_target);
+	_log("twitter_target"+$twitter_target);
+	_log("insta_target"+$insta_target);
+	_log("linkedin_target"+$linkedin_target);
+	_log("youtube_target"+$youtube_target);
+	_log("reddit_target"+$reddit_target);
+}
+
+function targetCheck($fbInt,$TwitterInt,$InstagramInt,$LinkedInInt,$YouTubeInt,$RedditInt){
+	if(($fbInt>=10)&&($TwitterInt>=10)&&($InstagramInt>=10)&&($LinkedInInt>=10)&&($YouTubeInt>=10)&&($RedditInt>=10)){
+	  return true;
+	}else{
+	  return false;
+	}
+}

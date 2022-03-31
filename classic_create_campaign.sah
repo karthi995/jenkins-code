@@ -1,0 +1,67 @@
+//suresh
+var $userName = "sureshgobi2608@gmail.com";
+var $password = "Suresh@78680";
+  
+//developer
+//var $userName ="clevermoedeveloper@gmail.com";
+//var $password = "clevermoe@1234";
+ 
+var $campaign_id="";
+var $moeName="Shopify Moe 1"
+var $moeUrl="https://sisterjane.com/collections/tops-sale/products/starlight-oversized-shirt";
+
+
+  
+$login();
+$createCampaign();
+$closePopUp();
+$logout();
+  
+function $logout(){
+	_wait($timeCalculation(5));
+	_click(_link("Log-Out"));
+}
+  
+function $closePopUp(){
+    _wait($timeCalculation(5));
+	_click(_div("classic-popup-close-btn"));
+	_click(_div("popup-close-btn[16]"));
+}
+  
+function $login() {
+	_navigateTo("https://app.clevermoe.com");
+	//_navigateTo("https://44.232.220.230/login");
+    if (_condition(_exists(_textbox("userName")))) {
+        $notLoggedOut = true;
+        _setValue(_textbox("userName"), $userName);
+        _setValue(_password("password"), $password);
+		_click(_link("Login[1]"));
+		
+    } else {
+		_set($checkUrlFunction, checkUrl());
+		if($checkUrlFunction) {
+			$logout();
+			$login();
+		} else {
+			_log("Login email input box not found");
+		}
+    }
+    _wait($timeCalculation(5));
+}
+
+function $timeCalculation($s){
+	var t=$s*1000;
+	return t;
+}
+
+function $createCampaign(){
+	_click(_link("New Ad Campaign"));
+	_click(_div("Advanced Ad Options"));
+}
+
+//<browser>
+function checkUrl() {
+	var url = window.location.href;
+	return url.indexOf("login") !== -1;
+}
+//</browser>
